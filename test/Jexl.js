@@ -64,6 +64,20 @@ describe("Jexl", function() {
   it("should pass context", function() {
     return inst.eval("foo", { foo: "bar" }).should.become("bar");
   });
+  it("should short-circuit logical AND", function() {
+    return inst
+      .eval("browserSettings && browserSettings.something", {
+        browserSettings: null
+      })
+      .should.become(null);
+  });
+  it("should short-circuit logical OR", function() {
+    return inst
+      .eval("true || browserSettings.foo", {
+        browserSettings: null
+      })
+      .should.become(true);
+  });
   it("should allow binaryOps to be defined", function() {
     inst.addBinaryOp("_=", 20, function(left, right) {
       return left.toLowerCase() === right.toLowerCase();
